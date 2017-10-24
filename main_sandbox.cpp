@@ -9,6 +9,52 @@ using namespace cv;
 
 enum
 {
+	WHITE,
+	ORANGE,
+	GREEN,
+	RED,
+	BLUE,
+	YELLOW
+};
+
+enum
+{
+	UP,
+	BACK,
+	LEFT,
+	FRONT,
+	RIGHT,
+	DOWN
+};
+
+class Cube
+{
+	public :
+		Scalar _face[6][9];
+		Cube();
+};
+
+Cube::Cube(){
+	cout << "cube created" << endl;
+	for (int face = 0; face < 6 ; face++)
+	{
+		for (int square = 0; square < 9; square++)
+		{
+			switch (face)
+			{
+				case WHITE : _face[face][square] = Scalar(255,255,255);break;
+				case ORANGE : _face[face][square] = Scalar(0,125,255);break;
+				case GREEN : _face[face][square] = Scalar(0,255,0);break;
+				case RED : _face[face][square] = Scalar(0,0,255);break;
+				case BLUE : _face[face][square] = Scalar(255,0,0);break;
+				case YELLOW : _face[face][square] = Scalar(0,255,255);break;
+			}
+		}
+	}
+}
+
+enum
+{
 	H_MIN,
 	H_MAX,
 	S_MIN,
@@ -38,9 +84,9 @@ const string trackbarWindowName = "after shit";
 void on_trackbar( int, void* )
 {//This function gets called whenever a
 	// trackbar position is changed
-	cout << "H [" << H_MIN << "," << H_MAX << endl;
-	cout << "V [" << V_MIN << "," << V_MAX << endl;
-	cout << "S [" << S_MIN << "," << S_MAX << endl;
+	cout << "H [" << WHITECONFIG[H_MIN] << "," << WHITECONFIG[H_MAX] << endl;
+	cout << "V [" << WHITECONFIG[V_MIN] << "," << WHITECONFIG[V_MAX] << endl;
+	cout << "S [" << WHITECONFIG[S_MIN] << "," << WHITECONFIG[S_MAX] << endl;
 }
 
 void createTrackBars(){
@@ -63,6 +109,66 @@ void createTrackBars(){
     //cv::createTrackbar( "S_MAX", trackbarWindowName, &S_MAX, S_MAX, on_trackbar );
     //cv::createTrackbar( "V_MIN", trackbarWindowName, &V_MIN, V_MAX, on_trackbar );
     //cv::createTrackbar( "V_MAX", trackbarWindowName, &V_MAX, V_MAX, on_trackbar );
+}
+//         ###
+//         ###
+//         ###
+//
+// ### ### ### ###
+// ### ### ### ### // Cube display pattern
+// ### ### ### ###  // 12 square, 3 big spacing, 8 small spacing
+// 
+//         ###      // ll need width / ()
+//         ###
+//         ###
+// 
+//
+void draw_cube(Mat& img, Cube cube) //, Cube face color Data, will see
+{
+	Point start(10, 10);
+	int total_width = 150;
+	int face_spacing = 10;
+	int square_spacing = 2;
+	int square_width = (total_width - 3*face_spacing - 3*square_spacing) / 12;
+	int void_line_decal = 6*square_width + 4*square_spacing + 2* face_spacing;
+	int decal_square = square_spacing + square_width;
+	int decal_face = square_spacing * 2 + square_width * 3 + face_spacing;
+	Scalar color(255,0,0);
+
+
+	//first line
+	for (int i = 0; i < 3; i++) // 3
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			Point p1 =  Point(start.x + void_line_decal + i * decal_square, start.y + j * decal_square);
+			Point p2 = Point(p1.x + square_width, p1.y + square_width);
+			cv::rectangle(img, p1, p2, cube._face[UP][3*j + i], -1,8,0);
+		}
+	}
+	// second line 
+	for (int face = 0; face < 4; face++)
+	{
+		for (int i = 0; i < 3; i++) // 3
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				Point p1 =  Point(start.x + face * decal_face + i * decal_square, start.y + decal_face + j * decal_square);
+				Point p2 = Point(p1.x + square_width, p1.y + square_width);
+				cv::rectangle(img, p1, p2, cube._face[1 + face][j+3 + i], -1,8,0);
+			}
+		}
+	}
+	//last
+	for (int i = 0; i < 3; i++) // 3
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			Point p1 =  Point(start.x + void_line_decal + i * decal_square, start.y + (2*decal_face) + j * decal_square);
+			Point p2 = Point(p1.x + square_width, p1.y + square_width);
+			cv::rectangle(img, p1, p2, cube._face[DOWN][j+3 + i], -1,8,0);
+		}
+	}
 }
 
 void draw_square(Mat& img, const Scalar& color)
@@ -128,6 +234,7 @@ YELLOWCONFIG[S_MAX] = 159;
 	createTrackBars();
 
 	//Matrix to store each frame of the webcam feed
+	Cube cube;
 	Mat filtred_red;
 	Mat cameraFeed;
 	Mat miror_cameraFeed;
@@ -158,16 +265,17 @@ YELLOWCONFIG[S_MAX] = 159;
 				Scalar(REDCONFIG[H_MAX],REDCONFIG[S_MAX],REDCONFIG[V_MAX]),redMat);
 		draw_square(cameraFeed, Scalar(255,0,0));
 
-		morphOps(whiteMat, filtred_red);
+		morphOps(yellowMat, filtred_red);
 
 //		imshow(WINDOW_HSV, HSV);
 		cv::flip(cameraFeed, miror_cameraFeed,1);
+		draw_cube(miror_cameraFeed, cube); //, Cube face color Data, will see
 		imshow(WINDOW_NAME, miror_cameraFeed);
-		//imshow("red finder", redMat);
+		imshow("red finder", redMat);
 		//imshow("filtred red finder", redMat);
-		//imshow("yellow finder", yellowMat);
+		imshow("yellow finder", yellowMat);
 		imshow("white finder", whiteMat);
-		imshow("filtred finder", filtred_red);
+		imshow("filtred yellow", filtred_red);
 		//imshow(WINDOW_3, threshold);
 		waitKey(30);
 	}
