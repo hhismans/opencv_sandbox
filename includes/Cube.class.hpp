@@ -6,7 +6,7 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/25 01:53:59 by hhismans          #+#    #+#             */
-/*   Updated: 2017/10/25 02:29:56 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/10/25 04:53:28 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define CUBE_CLASS_HPP
 
 #include <iostream>
-#include "../includes/OpenCvHandler.class.hpp"
 # include "opencv2/highgui/highgui.hpp"
 # include "opencv2/imgproc/imgproc.hpp"
 
@@ -27,7 +26,7 @@ class Cube
 		Cube( void );
 		Cube( Cube const & src );
 		~Cube( void );
-
+		void changeFace(int faceId, std::vector<int> face);
 		Cube &	operator=( Cube const & rhs);
 	private:
 };
