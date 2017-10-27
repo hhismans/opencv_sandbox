@@ -6,7 +6,7 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/25 00:38:06 by hhismans          #+#    #+#             */
-/*   Updated: 2017/10/27 04:38:05 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/10/27 08:30:24 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,10 +92,6 @@ void on_trackbar( int, void* )
 			case GREEN: 	cout << " GREEN : " << endl;
 			default : std::cerr << "Error using debug function" << std::endl;return;
 		}
-		cout << "H [" << _HSVConfig[BLUE][H_MIN] << "," << _HSVConfig[BLUE][H_MAX] << endl;
-		cout << "V [" << _HSVConfig[BLUE][V_MIN] << "," << _HSVConfig[BLUE][V_MAX] << endl;
-		cout << "S [" << _HSVConfig[BLUE][S_MIN] << "," << _HSVConfig[BLUE][S_MAX] << endl;
-		cout << "-------------" << endl;
 	}
 }
 

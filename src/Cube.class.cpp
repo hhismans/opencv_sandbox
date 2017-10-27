@@ -6,21 +6,12 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/25 01:53:40 by hhismans          #+#    #+#             */
-/*   Updated: 2017/10/27 07:17:38 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/10/27 08:53:36 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Cube.class.hpp"
 #include "../includes/enum.hpp"
-enum
-{
-	WHITE,
-	ORANGE,
-	GREEN,
-	RED,
-	BLUE,
-	YELLOW
-};
 
 void Cube::changeFace(int faceId, std::vector<int> face)
 {
@@ -110,12 +101,13 @@ int	Cube::whichRidgeItis(int color1, int color2)
 	}
 }
 
-bool isUD(int color)
+bool isUD(int color) {return (color == WHITE || color == YELLOW);} // is updown
+bool isLR(int color) (return (color == BLUE || color == GREEN);} // is left right
+bool isFB(int color) (return (color == RED || color == ORANGE);} // is fornt back
 {
 	return (color == WHITE || color == YELLOW);
 }
-
-int Cube::getPieceOrientation(int position, std::vector<int> faces)
+int Cube::getPieceOrientation(int position, std::vector<int> faces) // good coin orientation, UD color on UD face
 {
 	if (position == ONE)
 	{
@@ -175,20 +167,64 @@ int Cube::getPieceOrientation(int position, std::vector<int> faces)
 	}
 }
 
+//Une arête avec une couleur U/D sur une face U/D est bien orientée.
+//Une arête avec une couleur L/R sur une face L/R est bien orientée.
+//Une arête avec une couleur U/D sur une face L/R est mal orientée.
+//Une arête avec une couleur L/R sur une face U/D est mal orientée.
+// cf for visual : https://www.francocube.com/deadalnix/blindfold_step_2
 int	getRidgeOrientation(int position, std::vector<int> faces)
 {
-	if (position == A_RIDGE)
+	switch (position)
 	{
+		case A_RIDGE: 
+			if (isUD(faces[UP][BOTTOMMIDDLE]) || isLR(faces[FRONT][TOPMIDDLE])) return OK;
+			else return KO;
+			break;
+		case B_RIDGE: 
+			if (isUD(faces[UP][MIDDLELEFT]) || isLR(faces[LEFT][TOPMIDDLE])) return OK;
+			else return KO;
+			break;
+		case C_RIDGE: 
+			if (isUD(faces[UP][TOPMIDDLE]) || isLR(faces[BACK][TOPMIDDLE])) return OK;
+			else return KO;
+			break;
+		case D_RIDGE: 
+			if (isUD(faces[UP][TOPMIDDLE]) || isLR(faces[BACK][TOPMIDDLE])) return OK;
+			else return KO;
+			break;
+		case E_RIDGE: 
+			if (isUD(faces[FRONT][MIDDLERIGHT]) || isLR(faces[RIGHT][MIDDLELEFT])) return OK;
+			else return KO;
+			break;
+		case F_RIDGE: 
+			if (isUD(faces[FRONT][MIDDLELEFT]) || isLR(faces[LEFT][MIDDLERIGHT])) return OK;
+			else return KO;
+			break;
+		case G_RIDGE: 
+			if (isUD(faces[BACK][MIDDLERIGHT]) || isLR(faces[LEFT][MIDDLELEFT])) return OK;
+			else return KO;
+			break;
+		case H_RIDGE: 
+			if (isUD(faces[BACK][MIDDLELEFT]) || isLR(faces[RIGHT][MIDDLELRIGHT])) return OK;
+			else return KO;
+			break;
+		case I_RIDGE: 
+			if (isUD(faces[DOWN][TOPMIDDLE]) || isLR(faces[FRONT][BOTTOMMIDDLE])) return OK;
+			else return KO;
+			break;
+		case J_RIDGE: 
+			if (isUD(faces[DOWN][MIDDLELEFT]) || isLR(faces[LEFT][BOTTOMMIDDLE])) return OK;
+			else return KO;
+			break;
+		case K_RIDGE: 
+			if (isUD(faces[DOWN][BOTTOMMIDDLE]) || isLR(faces[BACK][BOTTOMMIDDLE])) return OK;
+			else return KO;
+			break;
+		case L_RIDGE: 
+			if (isUD(faces[DOWN][MIDDLERIGHT]) || isLR(faces[RIGHT][BOTTOMMIDDLE])) return OK;
+			else return KO;
+			break;
 	}
-	if (position == A_RIDGE)
-	if (position == A_RIDGE)
-	if (position == A_RIDGE)
-	if (position == A_RIDGE)
-	if (position == A_RIDGE)
-	if (position == A_RIDGE)
-	if (position == A_RIDGE)
-	if (position == A_RIDGE)
-	if (position == A_RIDGE)
 }
 
 void Cube::initCubeWithFace(std::vector<int> faces)
@@ -225,6 +261,7 @@ void Cube::initCubeWithFace(std::vector<int> faces)
 
 	for (int ridge = 0; ridge < 12; ridge++)
 		_ridges.orientation = getRidgeOrientation(ridge, faces);
+	// YOUHOU !
 }
 
 Cube::Cube( void )
