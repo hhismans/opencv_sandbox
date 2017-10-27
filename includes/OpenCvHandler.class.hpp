@@ -6,7 +6,7 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/25 00:32:30 by hhismans          #+#    #+#             */
-/*   Updated: 2017/10/25 04:56:50 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/10/27 05:12:50 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,44 +18,14 @@
 # include "opencv2/imgproc/imgproc.hpp"
 
 # include "../includes/Cube.class.hpp"
+# include "../includes/enum.hpp"
 
 # define FRAME_WIDTH  640
 # define FRAME_HEIGHT  480
 # define MAIN_WINDOW_NAME "Main window"
 
-#define CENTER 4
-
 using namespace cv;
 using namespace std;
-enum
-{
-	WHITE,
-	ORANGE,
-	GREEN,
-	RED,
-	BLUE,
-	YELLOW
-};
-
-enum
-{
-	UP,
-	BACK,
-	LEFT,
-	FRONT,
-	RIGHT,
-	DOWN
-};
-
-enum
-{
-	H_MIN,
-	H_MAX,
-	S_MIN,
-	S_MAX,
-	V_MIN,
-	V_MAX
-};
 
 class OpenCvHandler
 {
@@ -76,6 +46,8 @@ class OpenCvHandler
 		void bundleFaces();
 		bool isBundleFull();
 
+		void debug_window(int color, int type);
+
 		std::vector<bool>getColorPresenceMap(Mat &img);
 		
 
@@ -91,6 +63,8 @@ class OpenCvHandler
 		std::vector< std::vector<bool> >	_boolPresenceMats;
 		std::vector< std::vector<int> >		_HSVConfig;
 		std::vector<cv::Scalar>				_colorsScalar;
+
+		bool								_debugShown[6];
 
 };
 

@@ -6,7 +6,7 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/25 00:38:06 by hhismans          #+#    #+#             */
-/*   Updated: 2017/10/25 05:16:26 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/10/27 04:38:05 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 //         ###
 // 
 //
-void OpenCvHandler::draw_cube(Mat& img) //, Cube face color Data, will see
+void OpenCvHandler::draw_cube(Mat& img) //, Cube face color Data, will see, Please do not puke on this code
 {
 	Point start(10, 10);
 	int total_width = 150;
@@ -46,7 +46,7 @@ void OpenCvHandler::draw_cube(Mat& img) //, Cube face color Data, will see
 		{
 			Point p1 =  Point(start.x + void_line_decal + i * decal_square, start.y + j * decal_square);
 			Point p2 = Point(p1.x + square_width, p1.y + square_width);
-			cv::rectangle(img, p1, p2, _cube._face[UP][3*i + i], -1,8,0);
+			cv::rectangle(img, p1, p2, _cube._face[FACEUP][3*i + i], -1,8,0);
 		}
 	}
 	// second line 
@@ -69,7 +69,7 @@ void OpenCvHandler::draw_cube(Mat& img) //, Cube face color Data, will see
 		{
 			Point p1 =  Point(start.x + void_line_decal + i * decal_square, start.y + (2*decal_face) + j * decal_square);
 			Point p2 = Point(p1.x + square_width, p1.y + square_width);
-			cv::rectangle(img, p1, p2, _cube._face[DOWN][i*3 + j], -1,8,0);
+			cv::rectangle(img, p1, p2, _cube._face[FACEDOWN][i*3 + j], -1,8,0);
 		}
 	}
 }
@@ -77,8 +77,69 @@ void OpenCvHandler::draw_cube(Mat& img) //, Cube face color Data, will see
 
 
 void on_trackbar( int, void* )
-{//This function gets called whenever a
+{
+	//This function gets called whenever a
 	// trackbar position is changed
+	for (int i = 0; i < 6 ; i++)
+	{
+		switch (i)
+		{
+			case WHITE: 	cout << "WHITE : " << endl;
+			case BLUE:		cout << "BLUE : " << endl;
+			case RED:		cout << "RED : " << endl;
+			case ORANGE:	cout << "ORANGE : " << endl;
+			case YELLOW:	cout << "YELLOW : " << endl;
+			case GREEN: 	cout << " GREEN : " << endl;
+			default : std::cerr << "Error using debug function" << std::endl;return;
+		}
+		cout << "H [" << _HSVConfig[BLUE][H_MIN] << "," << _HSVConfig[BLUE][H_MAX] << endl;
+		cout << "V [" << _HSVConfig[BLUE][V_MIN] << "," << _HSVConfig[BLUE][V_MAX] << endl;
+		cout << "S [" << _HSVConfig[BLUE][S_MIN] << "," << _HSVConfig[BLUE][S_MAX] << endl;
+		cout << "-------------" << endl;
+	}
+}
+
+enum {
+	NORMAL,
+	FILTRED
+};
+
+void OpenCvHandler::debug_window(int color, int type){
+	std::string window_name = "debug window : ";
+	std::string track_bar_name = "trackBar : ";
+	cv::Mat mat_to_show;
+
+	switch (color)
+	{
+		case WHITE: 	track_bar_name += "WHITE";window_name += "WHITE"; break;
+		case BLUE:		track_bar_name += "BLUE";window_name += "BLUE"; break;
+		case RED:		track_bar_name += "RED";window_name += "RED"; break;
+		case ORANGE:	track_bar_name += "ORANGE";window_name += "ORANGE"; break;
+		case YELLOW:	track_bar_name += "YELLOE";window_name += "YELLOW"; break;
+		case GREEN: 	track_bar_name += "GREEN";window_name += "GREEN"; break;
+		default : std::cerr << "Error using debug function" << std::endl;return;
+	}
+	switch (type)
+	{
+		case NORMAL		: window_name += " NORMAL";mat_to_show = _faceMat[color];break;
+		case FILTRED	: window_name += " FILTRED";mat_to_show = _filtredFaceMat[color];break;
+	}
+
+	imshow(window_name, mat_to_show);
+	if (!_debugShown[color])
+	{
+	imshow(track_bar_name, mat_to_show);
+	cv::createTrackbar( "H_MIN",track_bar_name , &_HSVConfig[color][H_MIN], 256, on_trackbar );
+    cv::createTrackbar( "H_MAX",track_bar_name , &_HSVConfig[color][H_MAX], 256, on_trackbar );
+
+	cv::createTrackbar( "V_MIN",track_bar_name , &_HSVConfig[color][V_MIN], 256, on_trackbar );
+    cv::createTrackbar( "V_MAX",track_bar_name , &_HSVConfig[color][V_MAX], 256, on_trackbar );
+
+	cv::createTrackbar( "S_MIN",track_bar_name , &_HSVConfig[color][S_MIN], 256, on_trackbar );
+    cv::createTrackbar( "S_MAX",track_bar_name , &_HSVConfig[color][S_MAX], 256, on_trackbar );
+	_debugShown[color] = true;
+	}
+
 }
 
 void OpenCvHandler::createTrackBars(){
@@ -131,7 +192,7 @@ void OpenCvHandler::morphOps(Mat &src, Mat &dst)
 	//create structuring element that will be used to "dilate" and "erode" image.
 	//the element chosen here is a 3px by 3px rectangle
 	Mat erodeElement = getStructuringElement( MORPH_RECT,Size(3,3));
-    //dilate with larger element so make sure object is nicely visible
+    //dilate with larger element so make sure object is nicely visible // Maybe it's too much
 	Mat dilateElement = getStructuringElement( MORPH_RECT,Size(8,8));
 
 	erode(src,dst,erodeElement);
@@ -247,6 +308,8 @@ void OpenCvHandler::run(void)
 		draw_cube(_mirorCameraFeed); //, Cube face color Data, will see
 		imshow(MAIN_WINDOW_NAME, _mirorCameraFeed);
 		//imshow("debug_window", _filtredFaceMat[WHITE]);
+		debug_window(ORANGE, NORMAL);
+		debug_window(ORANGE, FILTRED);
 		resetBundlePresence();
 		waitKey(30);
 	}
@@ -286,6 +349,11 @@ OpenCvHandler::OpenCvHandler( void )
 		alloc_vector(_boolPresenceMats[i],9);
 	}
 
+	for (int i = 0;i < 6; i++)
+	{
+		_debugShown[i] = false;
+	}
+	
 	std::cout << "OpenCvHandler succefully instanciate 2" << std::endl;
 	_colorsScalar[WHITE] = Scalar(255,255,255);
 	_colorsScalar[YELLOW] = Scalar(0,255,255);
@@ -332,7 +400,7 @@ OpenCvHandler::OpenCvHandler( void )
 
 	_HSVConfig[GREEN][H_MIN] = 54;
 	_HSVConfig[GREEN][H_MAX] = 87;
-	_HSVConfig[GREEN][V_MIN] = 153;
+	_HSVConfig[GREEN][V_MIN] = 133;
 	_HSVConfig[GREEN][V_MAX] = 256;
 	_HSVConfig[GREEN][S_MIN] = 211;
 	_HSVConfig[GREEN][S_MAX] = 256;
