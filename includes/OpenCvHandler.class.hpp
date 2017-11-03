@@ -6,7 +6,7 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/25 00:32:30 by hhismans          #+#    #+#             */
-/*   Updated: 2017/10/27 08:30:13 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/11/03 02:51:24 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 # include "../includes/Cube.class.hpp"
 # include "../includes/enum.hpp"
+# include "../includes/Piece.class.hpp"
 
 # define FRAME_WIDTH  640
 # define FRAME_HEIGHT  480
@@ -49,7 +50,6 @@ class OpenCvHandler
 		void debug_window(int color, int type);
 
 		std::vector<bool>getColorPresenceMap(Mat &img);
-		
 
 	private:
 		Cube								_cube;

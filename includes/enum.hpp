@@ -6,7 +6,7 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/27 04:29:36 by hhismans          #+#    #+#             */
-/*   Updated: 2017/10/27 07:14:00 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/11/03 08:21:15 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,16 @@ enum
 	YELLOW
 };
 
+enum
+{
+	UP,
+	BACK,
+	LEFT,
+	FRONT,
+	RIGHT,
+	DOWN
+};
+
 enum // face enum
 {
 	FACEUP,
@@ -58,20 +68,21 @@ enum // hsv config enum
 	V_MAX
 };
 
+
 enum Instruction
 {
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT,
-	BACK,
-	FRONT,
-	RUP,
-	RDOWN,
-	RLEFT,
-	RRIGHT,
-	RBACK,
-	RFRONT
+	IUP,
+	IDOWN,
+	ILEFT,
+	IRIGHT,
+	IBACK,
+	IFRONT,
+	IRUP,
+	IRDOWN,
+	IRLEFT,
+	IRRIGHT,
+	IRBACK,
+	IRFRONT
 };
 
 enum CornerPosition
@@ -82,10 +93,11 @@ enum CornerPosition
 	FOUR,
 	FIVE,
 	SIX,
-	SEXEN,
+	SEVEN,
 	EIGHT,
 };
 
+//DO NOT CHANGE THIS ONE BITCCCHHH
 enum Rotation
 {
 	CW, //clockwise
@@ -110,6 +122,7 @@ enum RidgePosition
 	E_RIDGE,
 	F_RIDGE,
 	G_RIDGE,
+	H_RIDGE,
 	I_RIDGE,
 	J_RIDGE,
 	K_RIDGE,
@@ -121,5 +134,6 @@ enum RidgeOrientation
 	TRUE,
 	FALSE
 };
+
 
 #endif

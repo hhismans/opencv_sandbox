@@ -6,7 +6,7 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/25 00:38:06 by hhismans          #+#    #+#             */
-/*   Updated: 2017/10/27 08:30:24 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/11/03 02:52:01 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -304,8 +304,8 @@ void OpenCvHandler::run(void)
 		draw_cube(_mirorCameraFeed); //, Cube face color Data, will see
 		imshow(MAIN_WINDOW_NAME, _mirorCameraFeed);
 		//imshow("debug_window", _filtredFaceMat[WHITE]);
-		debug_window(ORANGE, NORMAL);
-		debug_window(ORANGE, FILTRED);
+		debug_window(RED, NORMAL);
+		debug_window(RED, FILTRED);
 		resetBundlePresence();
 		waitKey(30);
 	}

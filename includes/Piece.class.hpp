@@ -6,21 +6,20 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/27 05:21:43 by hhismans          #+#    #+#             */
-/*   Updated: 2017/10/27 07:02:52 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/11/03 05:44:49 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIECE_CLASS_HPP
 # define PIECE_CLASS_HPP
 
-#include "enum.hpp"
+# include <iostream>
 
-enum  EPieceType
+enum EPieceType
 {
 	CORNER,
-	RIDGES,
-	DEFAULT
-}
+	RIDGES
+};
 
 class Piece
 {
@@ -30,9 +29,13 @@ class Piece
 		~Piece( void );
 
 		Piece &	operator=( Piece const & rhs);
-	private:
+
+		//brah
 		int				_type;
 		int				_im; //I'm
 		int				_orientation;
+	private:
 };
+
+std::ostream& operator<<(std::ostream& os, const Piece& rhs);
 #endif

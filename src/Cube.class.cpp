@@ -6,24 +6,76 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/25 01:53:40 by hhismans          #+#    #+#             */
-/*   Updated: 2017/10/27 08:53:36 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/11/03 08:48:22 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Cube.class.hpp"
 #include "../includes/enum.hpp"
 
+const int Cube::_tup[]	=	{A_RIDGE,D_RIDGE,C_RIDGE,B_RIDGE};
+const int Cube::_tdown[]	=	{I_RIDGE,J_RIDGE,K_RIDGE,L_RIDGE};
+const int Cube::_tleft[]	=	{B_RIDGE,F_RIDGE,J_RIDGE,E_RIDGE};
+const int Cube::_tright[]	=	{D_RIDGE,H_RIDGE,L_RIDGE,G_RIDGE};
+const int Cube::_tback[]	=	{C_RIDGE,G_RIDGE,K_RIDGE,F_RIDGE};
+const int Cube::_tfront[]	=	{A_RIDGE,E_RIDGE,I_RIDGE,H_RIDGE};
+
+
+const int Cube::_cup[]	=		{ONE, FOUR, THREE, TWO};
+const int Cube::_cdown[]	=	{FIVE, SIX, SEVEN, EIGHT};
+const int Cube::_cleft[]	=	{TWO, THREE,SEVEN, SIX};
+const int Cube::_cright[]	=	{ONE, FIVE, EIGHT, FOUR};
+const int Cube::_cback[]	=	{FOUR, EIGHT, SEVEN, THREE};
+const int Cube::_cfront[]	=	{ONE, TWO, SIX, FIVE};
+
+ostream& operator<<(ostream& os, const Cube& cube)
+{
+	for (int i = 0; i < 6; i++)
+	{
+		os << "face " << i << endl;
+		for (int j = 0; j < 9; j++)
+		{
+			if (!(j %3)) os << endl;
+			os << cube._intFace[i][j];
+		}
+		os << endl;
+	}
+	os << "-------------------" << endl;
+	for (int i = 0; i < 8; i++)
+	{
+		os << "Corner " << i + 1 << " is " << cube._coins[i] << " and need ";
+		if (cube._coins[i]._orientation == CW)
+			os << "CW";
+		else if (cube._coins[i]._orientation == CCW)
+			os << "CCW";
+		else
+			os << "ok";
+		os <<endl;
+	}
+	os <<endl;
+	for (int i = 0; i < 12; i++)
+	{
+		os << "ridge " << char(i + 'A') << " is " << cube._ridges[i] << " and is ";
+		cube._ridges[i]._orientation == OK ?  os << "OK" : os << "KO";
+		os << endl;
+	}
+	os << "---------------------------------------" << endl;
+	return os;
+}
+
 void Cube::changeFace(int faceId, std::vector<int> face)
 {
 	for (int i = 0; i < 9; i++)
-	switch (face[i])
 	{
-		case WHITE	: _face[faceId][i] = Scalar(255,255,255);break;
-		case ORANGE	: _face[faceId][i] = Scalar(0,125,255);break;
-		case GREEN	: _face[faceId][i] = Scalar(0,255,0);break;
-		case RED	: _face[faceId][i] = Scalar(0,0,255);break;
-		case BLUE	: _face[faceId][i] = Scalar(255,0,0);break;
-		case YELLOW : _face[faceId][i] = Scalar(0,255,255);break;
+		switch (face[i])
+		{
+			case WHITE	: _face[faceId][i] = Scalar(255,255,255);break;
+			case ORANGE	: _face[faceId][i] = Scalar(0,125,255);break;
+			case GREEN	: _face[faceId][i] = Scalar(0,255,0);break;
+			case RED	: _face[faceId][i] = Scalar(0,0,255);break;
+			case BLUE	: _face[faceId][i] = Scalar(255,0,0);break;
+			case YELLOW : _face[faceId][i] = Scalar(0,255,255);break;
+		}
 	}
 }
 
@@ -74,7 +126,7 @@ int	Cube::whichRidgeItis(int color1, int color2)
 		else if (color1 == GREEN || color2 == GREEN) return B_RIDGE;
 		else if (color1 == ORANGE || color2 == ORANGE) return C_RIDGE;
 		else if (color1 == BLUE || color2 == BLUE) return D_RIDGE;
-		else cerr << "ERROR in WHICHRIDGEITIS in WHITE" << endl;
+		else cerr << "ERROR in WHICHRIDGEITIS in WHITE (" << color1 << " "<< color2 << endl;
 	}
 	else if(color1 == YELLOW || color2 == YELLOW)
 	{
@@ -94,77 +146,77 @@ int	Cube::whichRidgeItis(int color1, int color2)
 	}
 	else if (color1 == ORANGE || color2 == ORANGE)
 	{
-		if (color1 == RED) color1 = color2;
+		if (color1 == ORANGE) color1 = color2;
 		if (color1 == GREEN)		return F_RIDGE;
-		else if (color1 == GREEN	return G_RIDGE;
+		else if (color1 == BLUE)	return G_RIDGE;
 		else cerr << "ERROR in WHICHRIDGEITIS in ORANGE" << endl;
 	}
+	return DEFAULT;
 }
 
 bool isUD(int color) {return (color == WHITE || color == YELLOW);} // is updown
-bool isLR(int color) (return (color == BLUE || color == GREEN);} // is left right
-bool isFB(int color) (return (color == RED || color == ORANGE);} // is fornt back
-{
-	return (color == WHITE || color == YELLOW);
-}
-int Cube::getPieceOrientation(int position, std::vector<int> faces) // good coin orientation, UD color on UD face
+bool isLR(int color) {return (color == BLUE || color == GREEN);} // is left right
+bool isFB(int color) {return (color == RED || color == ORANGE);} // is fornt back
+
+int Cube::getPieceOrientation(int position, int faces[6][9]) // good coin orientation, UD color on UD face
 {
 	if (position == ONE)
 	{
 		if (isUD(faces[UP][BOTTOMRIGHT])) return OK;
-		else if (isUD(face[RIGHT][TOPLEFT])) return CCW;
-		else if (isUD(face[FRONT][TOPRIGHT])) return CW;
+		else if (isUD(faces[RIGHT][TOPLEFT])) return CCW;
+		else if (isUD(faces[FRONT][TOPRIGHT])) return CW;
 		else cerr << "ERROR in pieceOrientation in ONE" << endl;
 	}
 	else if (position == TWO)
 	{
 		if (isUD(faces[UP][BOTTOMLEFT])) return OK;
-		else if (isUD(face[LEFT][TOPRIGHT])) return CW;
-		else if (isUD(face[FRONT][TOPLEFT])) return CCW;
-		else cerr << "ERROR in pieceOrientation in ONE" << endl;
+		else if (isUD(faces[LEFT][TOPRIGHT])) return CW;
+		else if (isUD(faces[FRONT][TOPLEFT])) return CCW;
+		else cerr << "ERROR in pieceOrientation in TWO" << endl;
 	}
 	else if (position == THREE)
 	{
 		if (isUD(faces[UP][TOPLEFT])) return OK;
-		else if (isUD(face[LEFT][TOPLEFT])) return CCW;
-		else if (isUD(face[BACK][TOPRIGHT])) return CW;
-		else cerr << "ERROR in pieceOrientation in ONE" << endl;
+		else if (isUD(faces[LEFT][TOPLEFT])) return CCW;
+		else if (isUD(faces[BACK][TOPRIGHT])) return CW;
+		else cerr << "ERROR in pieceOrientation in THREE" << endl;
 	}
 	else if (position == FOUR)
 	{
 		if (isUD(faces[UP][TOPRIGHT])) return OK;
-		else if (isUD(face[RIGHT][TOPRIGHT])) return CW;
-		else if (isUD(face[BACK][TOPLEFT])) return CCW;
-		else cerr << "ERROR in pieceOrientation in ONE" << endl;
+		else if (isUD(faces[RIGHT][TOPRIGHT])) return CW;
+		else if (isUD(faces[BACK][TOPLEFT])) return CCW;
+		else cerr << "ERROR in pieceOrientation in FOUR" << endl;
 	}
 	else if (position == FIVE)
 	{
 		if (isUD(faces[DOWN][TOPRIGHT])) return OK;
-		else if (isUD(face[RIGHT][BOTTOMLEFT])) return CW;
-		else if (isUD(face[FRONT][BOTTOMRIGHT])) return CCW;
-		else cerr << "ERROR in pieceOrientation in ONE" << endl;
+		else if (isUD(faces[RIGHT][BOTTOMLEFT])) return CW;
+		else if (isUD(faces[FRONT][BOTTOMRIGHT])) return CCW;
+		else cerr << "ERROR in pieceOrientation in FICE" << endl;
 	}
 	else if (position == SIX)
 	{
 		if (isUD(faces[DOWN][TOPLEFT])) return OK;
-		else if (isUD(face[LEFT][BOTTOMRIGHT])) return CCW;
-		else if (isUD(face[FRONT][BOTTOMLEFT])) return CW;
-		else cerr << "ERROR in pieceOrientation in ONE" << endl;
+		else if (isUD(faces[LEFT][BOTTOMRIGHT])) return CCW;
+		else if (isUD(faces[FRONT][BOTTOMLEFT])) return CW;
+		else cerr << "ERROR in pieceOrientation in SIX" << endl;
 	}
 	else if (position == SEVEN)
 	{
 		if (isUD(faces[DOWN][BOTTOMLEFT])) return OK;
-		else if (isUD(face[LEFT][BOTTOMLEFT])) return CW;
-		else if (isUD(face[BACK][BOTTOMRIGHT])) return CCW;
-		else cerr << "ERROR in pieceOrientation in ONE" << endl;
+		else if (isUD(faces[LEFT][BOTTOMLEFT])) return CW;
+		else if (isUD(faces[BACK][BOTTOMRIGHT])) return CCW;
+		else cerr << "ERROR in pieceOrientation in SEVEn" << *this<<  endl;
 	}
 	else if (position == EIGHT)
 	{
 		if (isUD(faces[DOWN][BOTTOMRIGHT])) return OK;
-		else if (isUD(face[RIGHT][BOTTOMRIGHT])) return CCW;
-		else if (isUD(face[FRONT][BOTTOMLEFT])) return CW;
-		else cerr << "ERROR in pieceOrientation in ONE" << endl;
+		else if (isUD(faces[RIGHT][BOTTOMRIGHT])) return CCW;
+		else if (isUD(faces[FRONT][BOTTOMLEFT])) return CW;
+		else cerr << "ERROR in pieceOrientation in EIGHT" << endl;
 	}
+	return -1;
 }
 
 //Une arête avec une couleur U/D sur une face U/D est bien orientée.
@@ -172,7 +224,7 @@ int Cube::getPieceOrientation(int position, std::vector<int> faces) // good coin
 //Une arête avec une couleur U/D sur une face L/R est mal orientée.
 //Une arête avec une couleur L/R sur une face U/D est mal orientée.
 // cf for visual : https://www.francocube.com/deadalnix/blindfold_step_2
-int	getRidgeOrientation(int position, std::vector<int> faces)
+int	getRidgeOrientation(int position, int faces[6][9])
 {
 	switch (position)
 	{
@@ -205,7 +257,7 @@ int	getRidgeOrientation(int position, std::vector<int> faces)
 			else return KO;
 			break;
 		case H_RIDGE: 
-			if (isUD(faces[BACK][MIDDLELEFT]) || isLR(faces[RIGHT][MIDDLELRIGHT])) return OK;
+			if (isUD(faces[BACK][MIDDLELEFT]) || isLR(faces[RIGHT][MIDDLERIGHT])) return OK;
 			else return KO;
 			break;
 		case I_RIDGE: 
@@ -225,42 +277,48 @@ int	getRidgeOrientation(int position, std::vector<int> faces)
 			else return KO;
 			break;
 	}
+	return -1;
 }
 
-void Cube::initCubeWithFace(std::vector<int> faces)
+void Cube::init()
+{
+	initCubeWithFace(_intFace);
+}
+
+void Cube::initCubeWithFace(int faces[6][9])
 {
 	//finding coin
-	_coins[ONE].im		= whichCoinItis(faces[UP][BOTTOMRIGHT],faces[RIGHT][TOPLEFT],faces[FRONT][TOPRIGHT]);
-	_coins[TWO].im		= whichCoinItis(faces[UP][BOTTOMLEFT],faces[LEFT][TOPRIGHT],faces[FRONT][TOPLEFT]);
-	_coins[THREE].im	= whichCoinItis(faces[UP][TOPLEFT],faces[LEFT][TOPLEFT],faces[BACK][TOPRIGHT]);
-	_coins[FOUR].im		= whichCoinItis(faces[UP][TOPRIGHT],faces[RIGHT][TOPRIGHT],faces[BACK][TOPLEFT]);
-	_coins[FIVE].im		= whichCoinItis(faces[DOWN][TOPRIGHT],faces[RIGHT][BOTTOMLEFT],faces[FRONT][BOTTOMRIGHT]);
-	_coins[SIX].im		= whichCoinItis(faces[DOWN][TOPLEFT],faces[LEFT][BOTTOMRIGHT],faces[FRONT][BOTTOMLEFT]);
-	_coins[SEVEN].im	= whichCoinItis(faces[DOWN][BOTTOMLEFT],faces[LEFT][BOTTOMLEFT],faces[BACK][BOTTOMRIGHT]);
-	_coins[EIGHT].im	= whichCoinItis(faces[DOWN][BOTTOMRIGHT],faces[RIGHT][BOTTOMRIGHT],faces[BACK][BETTOMLEFT]);
+	_coins[ONE]._im		= whichCornerItis(faces[UP][BOTTOMRIGHT],faces[RIGHT][TOPLEFT],faces[FRONT][TOPRIGHT]);
+	_coins[TWO]._im		= whichCornerItis(faces[UP][BOTTOMLEFT],faces[LEFT][TOPRIGHT],faces[FRONT][TOPLEFT]);
+	_coins[THREE]._im	= whichCornerItis(faces[UP][TOPLEFT],faces[LEFT][TOPLEFT],faces[BACK][TOPRIGHT]);
+	_coins[FOUR]._im	= whichCornerItis(faces[UP][TOPRIGHT],faces[RIGHT][TOPRIGHT],faces[BACK][TOPLEFT]);
+	_coins[FIVE]._im	= whichCornerItis(faces[DOWN][TOPRIGHT],faces[RIGHT][BOTTOMLEFT],faces[FRONT][BOTTOMRIGHT]);
+	_coins[SIX]._im		= whichCornerItis(faces[DOWN][TOPLEFT],faces[LEFT][BOTTOMRIGHT],faces[FRONT][BOTTOMLEFT]);
+	_coins[SEVEN]._im	= whichCornerItis(faces[DOWN][BOTTOMLEFT],faces[LEFT][BOTTOMLEFT],faces[BACK][BOTTOMRIGHT]);
+	_coins[EIGHT]._im	= whichCornerItis(faces[DOWN][BOTTOMRIGHT],faces[RIGHT][BOTTOMRIGHT],faces[BACK][BOTTOMLEFT]);
 
 	//orientation of coin
 	for (int coin = 0 ; coin < 9 ; coin++)
-		_coins[coin].orientation = getPieceOrientation(coin,faces);
+		_coins[coin]._orientation = getPieceOrientation(coin,faces);
 
 	//finding ridge 
-	_ridges[A_RIDGE].im = whichRidgeItis(faces[UP][BOTTOMMIDDLE], face[FRONT][TOPMIDDLE]);
-	_ridges[B_RIDGE].im = whichRidgeItis(faces[UP][MIDDLELEFT],face[LEFT][TOPMIDDLE]);
-	_ridges[C_RIDGE].im = whichRidgeItis(faces[UP][TOPMIDDLE], face[BACK][TOPMIDDLE]);
-	_ridges[D_RIDGE].im = whichRidgeItis(faces[UP][MIDDLERIGHT], face[RIGHT][TOPMIDDLE]);
+	_ridges[A_RIDGE]._im = whichRidgeItis(faces[UP][BOTTOMMIDDLE], faces[FRONT][TOPMIDDLE]);
+	_ridges[B_RIDGE]._im = whichRidgeItis(faces[UP][MIDDLELEFT],faces[LEFT][TOPMIDDLE]);
+	_ridges[C_RIDGE]._im = whichRidgeItis(faces[UP][TOPMIDDLE], faces[BACK][TOPMIDDLE]);
+	_ridges[D_RIDGE]._im = whichRidgeItis(faces[UP][MIDDLERIGHT], faces[RIGHT][TOPMIDDLE]);
 
-	_ridges[E_RIDGE].im = whichRidgeItis(faces[FRONT][MIDDLERIGHT], face[RIGHT][MIDDLELEFT]);
-	_ridges[F_RIDGE].im = whichRidgeItis(faces[FRONT][MIDDLELEFT], face[LEFT][MIDDLERIGHT]);
-	_ridges[G_RIDGE].im = whichRidgeItis(faces[BACK][MIDDLERIGHT], face[LEFT][MIDDLELEFT]);
-	_ridges[H_RIDGE].im = whichRidgeItis(faces[BACK][MIDDLELEFT], face[RIGHT][MIDDLERIGHT]);
+	_ridges[E_RIDGE]._im = whichRidgeItis(faces[FRONT][MIDDLELEFT], faces[LEFT][MIDDLERIGHT]);
+	_ridges[F_RIDGE]._im = whichRidgeItis(faces[LEFT][MIDDLELEFT], faces[BACK][MIDDLERIGHT]);
+	_ridges[G_RIDGE]._im = whichRidgeItis(faces[BACK][MIDDLELEFT], faces[RIGHT][MIDDLERIGHT]);
+	_ridges[H_RIDGE]._im = whichRidgeItis(faces[RIGHT][MIDDLELEFT], faces[FRONT][MIDDLERIGHT]);
 
-	_ridges[I_RIDGE].im = whichRidgeItis(faces[DOWN][TOPMIDDLE], face[FRONT][BOTTOMMIDDLE]);
-	_ridges[J_RIDGE].im = whichRidgeItis(faces[DOWN][MIDDLELEFT], face[LEFT][BOTTOMMIDDLE]);
-	_ridges[K_RIDGE].im = whichRidgeItis(faces[DOWN][BOTTOMMIDDLE], face[BACK][BOTTOMMIDDLE]);
-	_ridges[L_RIDGE].im = whichRidgeItis(faces[DOWN][MIDDLERIGHT], face[RIGHT][BOTTOMMIDDLE]);
+	_ridges[I_RIDGE]._im = whichRidgeItis(faces[DOWN][TOPMIDDLE], faces[FRONT][BOTTOMMIDDLE]);
+	_ridges[J_RIDGE]._im = whichRidgeItis(faces[DOWN][MIDDLELEFT], faces[LEFT][BOTTOMMIDDLE]);
+	_ridges[K_RIDGE]._im = whichRidgeItis(faces[DOWN][BOTTOMMIDDLE], faces[BACK][BOTTOMMIDDLE]);
+	_ridges[L_RIDGE]._im = whichRidgeItis(faces[DOWN][MIDDLERIGHT], faces[RIGHT][BOTTOMMIDDLE]);
 
 	for (int ridge = 0; ridge < 12; ridge++)
-		_ridges.orientation = getRidgeOrientation(ridge, faces);
+		_ridges[ridge]._orientation = getRidgeOrientation(ridge, faces);
 	// YOUHOU !
 }
 
@@ -282,10 +340,22 @@ cout << "cube created" << endl;
 			}
 		}
 	}
+	for (int i = 0; i < 6; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			_intFace[i][j] = i;
+		}
+	}
+	for (int i = 0; i < 8;i++)
+		_coins[i]._type = CORNER;
+	for (int i = 0; i < 12;i++)
+		_ridges[i]._type = RIDGES;
 }
 
 Cube::Cube( Cube const & src )
 {
+	
 }
 
 Cube::~Cube( void )
@@ -296,79 +366,150 @@ Cube::~Cube( void )
 }*/
 
 // part 2
-#include "rubiks.class.hpp"
+//#include "rubiks.class.hpp"
 
-
-Cube::~Cube(void) {}
 // cycle A -> B -> C -> D -> A [A,B,C,D]
-void Cube::cyclingRidge(std::vector<RidgePosition> & cycle, bool changeOrientation)
+void Cube::cyclingRidge(const int cycle[4], bool changeOrientation)
 {
-	Ridge r_tmp;
-	r_tmp = _ridges[cycle.back()];
-	for (int pos = 0; pos < cycle.size(); pos++)
+	Piece r_tmp;
+	r_tmp = _ridges[cycle[0]];
+	for (int pos = 0; pos < 3; pos++) // OLOL You know iterator right ?, nevermind
 	{
-		_ridges[cycle[pos + 1]] = _ridges[cycle[pos]];
+		_ridges[cycle[pos]] = _ridges[cycle[pos + 1]];
 		if (changeOrientation)
-			_ridges[cycle[pos + 1]].side = !_ridges[cycle[pos + 1]].side;
+			_ridges[cycle[pos]]._orientation = !_ridges[cycle[pos]]._orientation;
 	}
-		_ridges[cycle.front()] = r_tmp;
+		_ridges[cycle[3]] = r_tmp;
 		if (changeOrientation)
-			_ridges[cycle.front()] = ! _ridges[cycle.front()];
+			_ridges[cycle[3]]._orientation = ! _ridges[cycle[3]]._orientation;
 }
 
-void Cube::up(Instruction instruction)
+int		Cube::coinRot(int type, int coin)
 {
-	cyclingRidge([A_RIDGE,B_RIDGE,C_RIDGE,D_RIDGE], false);
+	if (type == CCW)
+	{
+		if (_coins[coin]._orientation == CCW)
+			_coins[coin]._orientation = OK;
+		else if(_coins[coin]._orientation == CW)
+			_coins[coin]._orientation = CCW;
+		else if(_coins[coin]._orientation == OK)
+			_coins[coin]._orientation = CW;
+		else cerr << "err : wrong ccw rot \n" << endl;
+	}
+	else if (type == CW)
+	{
+		if (_coins[coin]._orientation == CCW )
+			_coins[coin]._orientation = CW;
+		else if(_coins[coin]._orientation == CW ) // OMG "C)" SO DISTRUBING ROLF
+			_coins[coin]._orientation = OK;
+		else if(_coins[coin]._orientation == OK )
+			_coins[coin]._orientation = CCW;
+		else cerr << "err : Wrong cw rot\n" << endl;
+	}
+	else cerr << "err : Wrong rot celection\n" << endl;
+	if (type == CW) return CCW;
+	else if (type == CCW) return CW;
+	else return -1;
+}
+
+void Cube::cyclingCorner(const int cycle[4], int type)
+{
+	Piece r_tmp;
+	r_tmp = _coins[cycle[0]];
+	for (int pos = 0; pos < 3; pos++) // OLOL You know iterator right ?, nevermind
+	{
+		_coins[cycle[pos]] = _coins[cycle[pos + 1]];
+		if (type == CCW || type == CW)
+		{
+			cout << "type == " << type<< endl;
+			cout << "coin == " << _coins[cycle[pos]] << endl;
+			type = coinRot(type, cycle[pos]);
+		}
+	}
+		_coins[cycle[3]] = r_tmp;
+		if (type == CCW || type == CW)
+		coinRot(type, cycle[3]);
+}
+
+void Cube::up()
+{
+	int m[4] = {A_RIDGE,D_RIDGE,C_RIDGE,B_RIDGE};
+	cyclingRidge(m, false);
 /*	Ridge r_tmp;
 	
 	r_tmp = _ridges[D_RIDGE];
 	for (RidgePosition pos = A_RIDGE; pos < D_RIDGE; pos++)
 		_ridges[pos + 1] = _ridges[pos];
-	_ridges[A_RIDGE] = r_tmp;*/ 
+	_ridges[A_RIDGE] = r_tmp;*/
 }
+
+//const int Cube::_cup[]	=		{ONE, FOUR, THREE, TWO};
+//const int Cube::_cdown[]	=	{FIVE, SIX, SEVEN, EIGHT};
+//const int Cube::_cleft[]	=	{TWO, THREE,SEVEN, SIX};
+//const int Cube::_cright[]	=	{ONE, FIVE, EIGHT, FOUR};
+//const int Cube::_cback[]	=	{FOUR, EIGHT, SEVEN, THREE};
+//const int Cube::_cfront[]	=	{ONE, TWO, SIX, FIVE};
 
 void Cube::move(Instruction instruction)
 {
-	std::vector<RidgePosition> cyclesRidge[12];
-	cyclesRidge[UP] = [ONE,TWO,THREE,FOUR];
+	//std::vector<RidgePosition> cyclesRidge[12];
+	//cyclesRidge[UP] = [ONE,TWO,THREE,FOUR];
 
-	switch (instruction)
+		switch (instruction)
 	{
-		case UP :	cyclingRidge([A_RIDGE,B_RIDGE,C_RIDGE,D_RIDGE], false);
-					cyclingCorner([ONE,TWO,THREE,FOUR], false);
+		case IUP :	cyclingRidge(_tup, false);
+					cyclingCorner(_cup, -1);
 					break;
-		case DOWN : cyclingRidge([I_RIDGE,J_RIDGE,K_RIDGE,L_RIDGE], false);
-					cyclingCorner([FIVE,SIX,SEVEN,EIGHT], false);
+		case IDOWN : cyclingRidge(_tdown, false);
+					cyclingCorner(_cdown, -1);
 					break;
-		case LEFT : cyclingRidge([B_RIDGE,E_RIDGE,J_RIDGE,F_RIDGE], true);
-					cyclingCorner([TWO,,THREE,FOUR], true);
+		case ILEFT : cyclingRidge(_tleft, true);
+					cyclingCorner(_cleft, CW);
 					break;
-		case RIGHT: cyclingRidge([A_RIDGE,B_RIDGE,C_RIDGE,D_RIDGE], false);
-					cyclingCorner([ONE,TWO,THREE,FOUR], false);
+		case IRIGHT: cyclingRidge(_tright, false);
+					cyclingCorner(_cright, CCW);
 					break;
-		case BACK:  cyclingRidge([A_RIDGE,B_RIDGE,C_RIDGE,D_RIDGE], false);
-					cyclingCorner([ONE,TWO,THREE,FOUR], false);
+		case IBACK:  cyclingRidge(_tback, false);
+					cyclingCorner(_cback, CCW); 
 					break;
-		case FRONT: cyclingRidge([A_RIDGE,B_RIDGE,C_RIDGE,D_RIDGE], false);
-					cyclingCorner([ONE,TWO,THREE,FOUR], false);
+		case IFRONT: cyclingRidge(_tfront, false);
+					cyclingCorner(_cfront, CW);
 					break;
-		case RUP :	 cyclingRidge([A_RIDGE,B_RIDGE,C_RIDGE,D_RIDGE], false);
-					cyclingCorner([ONE,TWO,THREE,FOUR], false);
+/*		case IRUP :	
+					for (int i = 0; i < 3; i++){
+					cyclingRidge(_tup, false);
+					//cyclingCorner(_cup, false);
+					}
 					break;
-		case RDOWN : cyclingRidge([A_RIDGE,B_RIDGE,C_RIDGE,D_RIDGE], false);
-					cyclingCorner([ONE,TWO,THREE,FOUR], false);
+		case IRDOWN : 
+					for (int i = 0; i < 3; i++){
+					cyclingRidge(_tdown, false);
+//					cyclingCorner(_cdown, false);
+					}
 					break;
-		case RLEFT : cyclingRidge([A_RIDGE,B_RIDGE,C_RIDGE,D_RIDGE], false);
-					cyclingCorner([ONE,TWO,THREE,FOUR], false);
+		case IRLEFT : 
+					for (int i = 0; i < 3; i++){
+					cyclingRidge(_tleft, true);
+					cyclingCorner(_cleft, true);
+					}
 					break;
-		case RRIGHT: cyclingRidge([A_RIDGE,B_RIDGE,C_RIDGE,D_RIDGE], false);
-					cyclingCorner([ONE,TWO,THREE,FOUR], false);
+		case IRRIGHT: 
+					for (int i = 0; i < 3; i++){
+					cyclingRidge(_tright, false);
+					//cyclingCorner([ONE,TWO,THREE,FOUR], false);
+					}
 					break;
-		case RBACK:  cyclingRidge([A_RIDGE,B_RIDGE,C_RIDGE,D_RIDGE], false);
-					cyclingCorner([ONE,TWO,THREE,FOUR], false);
+		case IRBACK:
+					for (int i = 0; i < 3; i++){
+					cyclingRidge(_tback, false);
+					//cyclingCorner([ONE,TWO,THREE,FOUR], false);
+					}
 					break;
-		case RFRONT: cyclingRidge([A_RIDGE,B_RIDGE,C_RIDGE,D_RIDGE], false);
-					cyclingCorner([ONE,TWO,THREE,FOUR], false);
-					break;
+		case IRFRONT:
+					for (int i = 0; i < 3; i++){
+					cyclingRidge(_tfront, false);
+					//cyclingCorner(_tfront, false);
+					}
+					break*/;
 	}
 }
