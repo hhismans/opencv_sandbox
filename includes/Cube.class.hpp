@@ -6,7 +6,7 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/25 01:53:59 by hhismans          #+#    #+#             */
-/*   Updated: 2017/11/03 08:27:18 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/11/03 08:52:28 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,19 @@ class Cube
 
 		void setIntFace();
 
-		//algo
+		//movement
 		int		coinRot(int type, int coin); //Rotation of type CCW CW on _coins No coin (cf enum ONE TWO..)
 		void cyclingRidge(const int cycle[4], bool changeOrientation);
 		void cyclingCorner(const int cycle[4], int type);
 		void			move(Instruction instruction);
 		void up();
 
-		Piece	_coins[8];
-		Piece	_ridges[12];
+		//algo
+		void doWhiteCross();
+		
+		Piece			_coins[8];
+		Piece			_ridges[12];
+		std::string		solution;
 	private:
 		/*
 		 * Cube decrit comme 8 coin et 12 arete.

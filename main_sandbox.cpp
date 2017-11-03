@@ -171,7 +171,29 @@ void draw_cube(Mat& img, Cube cube) //, Cube face color Data, will see
 	}
 }
 
-void draw_square(Mat& img, const Scalar& color)
+std::vector<Mat*> *crop_in_squares(Mat& img)
+{
+	int used = 300;
+	int size = 30;
+	int space_between = (used - 3 * size ) / 2;
+
+	int startW = (FRAME_WIDTH - used) / 2;
+	int startH = (FRAME_HEIGHT - used) / 2;
+
+	std::vector<Mat *> *ret = new vector<Mat*>;
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			Rect croppe(startW + i*(size + space_between),startH + j*(size + space_between), size, size);
+			ret->push_back(new Mat());
+		}
+	}
+	return ret;
+}
+
+void draw_square(Mat& img, const Scalar& color) // user use this too see where to put his cube
 {
 	int used = 300;
 	int size = 30;
@@ -186,6 +208,26 @@ void draw_square(Mat& img, const Scalar& color)
 		{
 			cv::rectangle(img, Point(startW + i*(size + space_between), startH + j*(size + space_between)),
 							Point(startW + size + i*(size + space_between), startH + size + j*(size + space_between)), color, 1,8,0);
+		}
+	}
+}
+
+void draw_valid_square(Mat& img, const Scalar& color, vector<bool> boolMat) // user use this too see where to put his cube
+{
+	int used = 300;
+	int size = 30;
+	int space_between = (used - 3 * size ) / 2;
+
+	int startW = (FRAME_WIDTH - used) / 2;
+	int startH = (FRAME_HEIGHT - used) / 2;
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			if (boolMat[i * 3 + j])
+			cv::rectangle(img, Point(startW + i*(size + space_between), startH + j*(size + space_between)),
+							Point(startW + size + i*(size + space_between), startH + size + j*(size + space_between)), color, -1,8,0);
 		}
 	}
 }
@@ -207,8 +249,62 @@ void morphOps(Mat &src, Mat &dst)
 	dilate(src,dst,dilateElement);
 }
 
-int main (int argc, char **argv )
+int ROI_countNonZero(Mat &img, Rect ROI)
+{
+	Mat croppedMat(img, ROI);
+	return countNonZero(croppedMat);
+}
 
+void analyse_square(Mat &img)
+{
+	int used = 300;
+	int size = 30;
+	int space_between = (used - 3 * size ) / 2;
+
+	int startW = (FRAME_WIDTH - used) / 2;
+	int startH = (FRAME_HEIGHT - used) / 2;
+
+	Mat square(img, Rect(startW,startH, size,size));
+	if (countNonZero(square) > 500)
+		cout << "FOUND" << endl;
+	else
+		cout << "NOT FOUND" << endl;
+}
+
+std::vector<bool>getColorPresenceMap(Mat &img)
+{
+	std::vector<bool> ret(20);
+
+	int used = 300;
+	int size = 30;
+	int limit = (size * size) * 50 / 100; // 60% rempli =couleur est la
+	int space_between = (used - 3 * size ) / 2;
+
+	int startW = (FRAME_WIDTH - used) / 2;
+	int startH = (FRAME_HEIGHT - used) / 2;
+
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			Mat square(img, Rect(startW + i*(size + space_between),startH + j*(size + space_between), size,size));
+			ret[i*3 + j] =countNonZero(square) > limit;
+		}
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			cout << ret[i*3 + j] << "\t";
+		}
+		cout << endl;
+	}
+
+	cout << "--------------------" <<  endl;
+	return ret;
+}
+
+int main (int argc, char **argv )
 {
 REDCONFIG[H_MIN] = 128;
 REDCONFIG[H_MAX] = 213;
@@ -253,9 +349,12 @@ YELLOWCONFIG[S_MAX] = 159;
 
 	
 		//void rectangle(Mat& img, Point pt1, Point pt2, const Scalar& color, int thickness=1, int lineType=8, int shift=0)
+//std::vector<Mat> crop_in_squares(Mat& img)
 	while (1)
 	{
 		capture.read(cameraFeed); // capture matrix from camera feed
+
+
 		cvtColor(cameraFeed,HSV,COLOR_BGR2HSV); // convert to HSV mat
 		inRange(HSV,Scalar(WHITECONFIG[H_MIN],WHITECONFIG[S_MIN],WHITECONFIG[V_MIN]),
 				Scalar(WHITECONFIG[H_MAX],WHITECONFIG[S_MAX],WHITECONFIG[V_MAX]),whiteMat);
@@ -265,17 +364,22 @@ YELLOWCONFIG[S_MAX] = 159;
 				Scalar(REDCONFIG[H_MAX],REDCONFIG[S_MAX],REDCONFIG[V_MAX]),redMat);
 		draw_square(cameraFeed, Scalar(255,0,0));
 
-		morphOps(yellowMat, filtred_red);
+		morphOps(redMat, filtred_red);
+
+		std::vector<bool> tab= getColorPresenceMap(filtred_red);
+		draw_valid_square(cameraFeed, Scalar(0,0,255), tab);
 
 //		imshow(WINDOW_HSV, HSV);
 		cv::flip(cameraFeed, miror_cameraFeed,1);
+		//std::vector<Mat*> *allSquares = crop_in_squares(miror_cameraFeed);
 		draw_cube(miror_cameraFeed, cube); //, Cube face color Data, will see
+
 		imshow(WINDOW_NAME, miror_cameraFeed);
-		imshow("red finder", redMat);
+		//imshow("firstSquare", *allSquares->front());
 		//imshow("filtred red finder", redMat);
-		imshow("yellow finder", yellowMat);
-		imshow("white finder", whiteMat);
-		imshow("filtred yellow", filtred_red);
+		//imshow("yellow finder", yellowMat);
+		//imshow("white finder", whiteMat);
+		imshow("filtred red", filtred_red);
 		//imshow(WINDOW_3, threshold);
 		waitKey(30);
 	}
