@@ -6,7 +6,7 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/27 04:29:36 by hhismans          #+#    #+#             */
-/*   Updated: 2017/11/03 09:55:25 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/11/03 10:11:04 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,18 +71,18 @@ enum // hsv config enum
 
 enum Instruction
 {
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT,
-	BACK,
-	FRONT,
-	RUP,
-	RDOWN,
-	RLEFT,
-	RRIGHT,
-	RBACK,
-	RFRONT
+	IUP,
+	IDOWN,
+	ILEFT,
+	IRIGHT,
+	IBACK,
+	IFRONT,
+	IRUP,
+	IRDOWN,
+	IRLEFT,
+	IRRIGHT,
+	IRBACK,
+	IRFRONT
 };
 
 enum CornerPosition
