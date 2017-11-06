@@ -6,12 +6,14 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/25 01:53:40 by hhismans          #+#    #+#             */
-/*   Updated: 2017/11/03 08:48:22 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/11/06 17:12:16 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Cube.class.hpp"
 #include "../includes/enum.hpp"
+
+//TODO : movestring()
 
 const int Cube::_tup[]	=	{A_RIDGE,D_RIDGE,C_RIDGE,B_RIDGE};
 const int Cube::_tdown[]	=	{I_RIDGE,J_RIDGE,K_RIDGE,L_RIDGE};
@@ -19,7 +21,6 @@ const int Cube::_tleft[]	=	{B_RIDGE,F_RIDGE,J_RIDGE,E_RIDGE};
 const int Cube::_tright[]	=	{D_RIDGE,H_RIDGE,L_RIDGE,G_RIDGE};
 const int Cube::_tback[]	=	{C_RIDGE,G_RIDGE,K_RIDGE,F_RIDGE};
 const int Cube::_tfront[]	=	{A_RIDGE,E_RIDGE,I_RIDGE,H_RIDGE};
-
 
 const int Cube::_cup[]	=		{ONE, FOUR, THREE, TWO};
 const int Cube::_cdown[]	=	{FIVE, SIX, SEVEN, EIGHT};
@@ -282,7 +283,27 @@ int	getRidgeOrientation(int position, int faces[6][9])
 
 void Cube::init()
 {
-	initCubeWithFace(_intFace);
+	//initCubeWithFace(_intFace);
+	_ridges[A_RIDGE]._im = H_RIDGE;
+	_ridges[B_RIDGE]._im = H_RIDGE;
+	_ridges[C_RIDGE]._im = H_RIDGE;
+	_ridges[D_RIDGE]._im = D_RIDGE;
+
+	_ridges[A_RIDGE]._orientation = KO;
+	_ridges[B_RIDGE]._orientation = KO;
+	_ridges[C_RIDGE]._orientation = OK;
+	_ridges[D_RIDGE]._orientation = KO;
+
+	_ridges[A_RIDGE]._im = C_RIDGE;
+	_ridges[A_RIDGE]._orientation = OK;
+
+	_ridges[B_RIDGE]._im = H_RIDGE;
+	_ridges[B_RIDGE]._orientation = KO;
+	_ridges[C_RIDGE]._im = H_RIDGE;
+	_ridges[C_RIDGE]._orientation = KO;
+	_ridges[D_RIDGE]._im = H_RIDGE;
+	_ridges[D_RIDGE]._orientation = KO;
+
 }
 
 void Cube::initCubeWithFace(int faces[6][9])
@@ -351,12 +372,25 @@ cout << "cube created" << endl;
 		_coins[i]._type = CORNER;
 	for (int i = 0; i < 12;i++)
 		_ridges[i]._type = RIDGES;
+
+	_ridges[A_RIDGE]._im = C_RIDGE;
+	_ridges[A_RIDGE]._orientation = KO;
+
+	_ridges[B_RIDGE]._im = H_RIDGE;
+	_ridges[B_RIDGE]._orientation = KO;
+	_ridges[C_RIDGE]._im = H_RIDGE;
+	_ridges[C_RIDGE]._orientation = KO;
+	_ridges[D_RIDGE]._im = H_RIDGE;
+	_ridges[D_RIDGE]._orientation = KO;
+
 }
 
 Cube::Cube( Cube const & src )
 {
 	
 }
+
+
 
 Cube::~Cube( void )
 {
@@ -421,8 +455,8 @@ void Cube::cyclingCorner(const int cycle[4], int type)
 		_coins[cycle[pos]] = _coins[cycle[pos + 1]];
 		if (type == CCW || type == CW)
 		{
-			cout << "type == " << type<< endl;
-			cout << "coin == " << _coins[cycle[pos]] << endl;
+			//cout << "type == " << type<< endl;
+			//cout << "coin == " << _coins[cycle[pos]] << endl;
 			type = coinRot(type, cycle[pos]);
 		}
 	}
@@ -450,66 +484,95 @@ void Cube::up()
 //const int Cube::_cback[]	=	{FOUR, EIGHT, SEVEN, THREE};
 //const int Cube::_cfront[]	=	{ONE, TWO, SIX, FIVE};
 
+void Cube::moveString(std::string str)
+{
+	std::string instruction;
+	int instruction_size;
+	while (str.size())
+	{
+		if (str[1] == '2' || str[1] == '\'')
+			instruction_size = 2;
+		else
+			instruction_size = 1;
+		instruction = str.substr(0, instruction_size);
+		str.erase(0,instruction_size);
+		if (instruction == "U") move(IUP);
+		else if (instruction == "D") move(IDOWN);
+		else if (instruction == "L") move(ILEFT);
+		else if (instruction == "R") move(IRIGHT);
+		else if (instruction == "B") move(IBACK);
+		else if (instruction == "F") move(IFRONT);
+
+		else if (instruction == "U'") for(int i = 0;i<3;i++)move(IUP);
+		else if (instruction == "D'") for(int i = 0;i<3;i++)move(IDOWN);
+		else if (instruction == "L'") for(int i = 0;i<3;i++)move(ILEFT);
+		else if (instruction == "R'") for(int i = 0;i<3;i++)move(IRIGHT);
+		else if (instruction == "B'") for(int i = 0;i<3;i++)move(IBACK);
+		else if (instruction == "F'") for(int i = 0;i<3;i++)move(IFRONT);
+
+		else if (instruction == "U2") for(int i = 0;i<2;i++)move(IUP);
+		else if (instruction == "D2") for(int i = 0;i<2;i++)move(IDOWN);
+		else if (instruction == "L2") for(int i = 0;i<2;i++)move(ILEFT);
+		else if (instruction == "R2") for(int i = 0;i<2;i++)move(IRIGHT);
+		else if (instruction == "B2") for(int i = 0;i<2;i++)move(IBACK);
+		else if (instruction == "F2") for(int i = 0;i<2;i++)move(IFRONT);
+/*
+		switch()
+		{
+			case "U" : move(IUP);break;
+			case "D" : move(IDOWN);break;
+			case "L" : move(ILEFT);break;
+			case "R" : move(IRIGHT);break;
+			case "B" : move(IBACK);break;
+			case "F" : move(IFRONT);break;
+
+			case "U'" : for(int i = 0;i<3;i++)move(IUP);break;
+			case "D'" : for(int i = 0;i<3;i++)move(IDOWN);break;
+			case "L'" : for(int i = 0;i<3;i++)move(ILEFT);break;
+			case "R'" : for(int i = 0;i<3;i++)move(IRIGHT);break;
+			case "B'" : for(int i = 0;i<3;i++)move(IBACK);break;
+			case "F'" : for(int i = 0;i<3;i++)move(IFRONT);break;
+
+			case "U2" : for(int i = 0;i<2;i++)move(IUP);break;
+			case "D2" : for(int i = 0;i<2;i++)move(IDOWN);break;
+			case "L2" : for(int i = 0;i<2;i++)move(ILEFT);break;
+			case "R2" : for(int i = 0;i<2;i++)move(IRIGHT);break;
+			case "B2" : for(int i = 0;i<2;i++)move(IBACK);break;
+			case "F2" : for(int i = 0;i<2;i++)move(IFRONT);break;
+		}*/
+	}
+}
+
 void Cube::move(Instruction instruction)
 {
 	//std::vector<RidgePosition> cyclesRidge[12];
 	//cyclesRidge[UP] = [ONE,TWO,THREE,FOUR];
 
-		switch (instruction)
+	switch (instruction)
 	{
 		case IUP :	cyclingRidge(_tup, false);
 					cyclingCorner(_cup, -1);
+					cout << "UP CALL" <<endl;
 					break;
 		case IDOWN : cyclingRidge(_tdown, false);
 					cyclingCorner(_cdown, -1);
+					cout << "DOWN CALL" <<endl;
 					break;
 		case ILEFT : cyclingRidge(_tleft, true);
 					cyclingCorner(_cleft, CW);
+					cout << "LEFT CALL" <<endl;
 					break;
 		case IRIGHT: cyclingRidge(_tright, false);
 					cyclingCorner(_cright, CCW);
+					cout << "RIGHT CALL" <<endl;
 					break;
 		case IBACK:  cyclingRidge(_tback, false);
 					cyclingCorner(_cback, CCW); 
+					cout << "BACK CALL" <<endl;
 					break;
 		case IFRONT: cyclingRidge(_tfront, false);
 					cyclingCorner(_cfront, CW);
+					cout << "FRONT CALL" <<endl;
 					break;
-/*		case IRUP :	
-					for (int i = 0; i < 3; i++){
-					cyclingRidge(_tup, false);
-					//cyclingCorner(_cup, false);
-					}
-					break;
-		case IRDOWN : 
-					for (int i = 0; i < 3; i++){
-					cyclingRidge(_tdown, false);
-//					cyclingCorner(_cdown, false);
-					}
-					break;
-		case IRLEFT : 
-					for (int i = 0; i < 3; i++){
-					cyclingRidge(_tleft, true);
-					cyclingCorner(_cleft, true);
-					}
-					break;
-		case IRRIGHT: 
-					for (int i = 0; i < 3; i++){
-					cyclingRidge(_tright, false);
-					//cyclingCorner([ONE,TWO,THREE,FOUR], false);
-					}
-					break;
-		case IRBACK:
-					for (int i = 0; i < 3; i++){
-					cyclingRidge(_tback, false);
-					//cyclingCorner([ONE,TWO,THREE,FOUR], false);
-					}
-					break;
-		case IRFRONT:
-					for (int i = 0; i < 3; i++){
-					cyclingRidge(_tfront, false);
-					//cyclingCorner(_tfront, false);
-					}
-					break*/;
 	}
 }

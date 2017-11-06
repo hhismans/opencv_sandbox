@@ -6,7 +6,7 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/27 04:29:36 by hhismans          #+#    #+#             */
-/*   Updated: 2017/11/03 10:11:04 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/11/06 17:07:52 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,8 @@ enum Instruction
 	IRLEFT,
 	IRRIGHT,
 	IRBACK,
-	IRFRONT
+	IRFRONT,
+	ERROR = -1
 };
 
 enum CornerPosition

@@ -6,7 +6,7 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/25 01:53:59 by hhismans          #+#    #+#             */
-/*   Updated: 2017/11/03 08:52:28 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/11/06 16:55:56 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@
 using namespace cv; // SHAME
 using namespace std;
 
+// first layer formula
+// pour passer au prochain ridge : (i + 1) % 4
+// pour passer au precedent ridge : (i + 3) % 4
 class Cube
 {
 	public:
@@ -52,10 +55,18 @@ class Cube
 		void cyclingRidge(const int cycle[4], bool changeOrientation);
 		void cyclingCorner(const int cycle[4], int type);
 		void			move(Instruction instruction);
+		void moveString(std::string str);
 		void up();
 
 		//algo
 		void doWhiteCross();
+			void moveUpWellOriented(int init, int dest);
+		void moveUpBadOriented(int init, int dest);
+			std::string stringFromInstruction(Instruction inst);
+			string moveUpWithBuffer(int src, int dest, int orientation); // exempel A_RIDGE on UP KO || OK
+			bool isAllOk(int piece);
+			int nbOkRidge();
+			string caseCanMoveFirstLayer();
 		
 		Piece			_coins[8];
 		Piece			_ridges[12];
@@ -65,6 +76,7 @@ class Cube
 		 * Cube decrit comme 8 coin et 12 arete.
 		 * Chaque arete
 		 * */
+	// rot array use to move _t ridge _c coin (cycle done by ridge)
 	static const int _tup[4]	;
 	static const int _tdown[4]	;
 	static const int _tleft[4]	;

@@ -4,6 +4,7 @@ set (NAME_SRC
 		src/main.cpp
 		src/OpenCvHandler.class.cpp
 		src/Cube.class.cpp
+		src/Cube.algo.class.cpp
 		src/Piece.class.cpp
 		)
 set (NAME_HEADERS
