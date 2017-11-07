@@ -6,7 +6,7 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/25 01:53:59 by hhismans          #+#    #+#             */
-/*   Updated: 2017/11/06 16:55:56 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/11/07 10:59:03 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ class Cube
 
 		//algo
 		void doWhiteCross();
+string moveMiddleWithBuffer(i, _ridges[i]._im, _ridges[i]._orientation);
 			void moveUpWellOriented(int init, int dest);
 		void moveUpBadOriented(int init, int dest);
 			std::string stringFromInstruction(Instruction inst);

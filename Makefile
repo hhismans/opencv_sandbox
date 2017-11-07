@@ -123,32 +123,140 @@ DisplayImage/fast:
 	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/build
 .PHONY : DisplayImage/fast
 
-main_sandbox.o: main_sandbox.cpp.o
+src/Cube.algo.class.o: src/Cube.algo.class.cpp.o
 
-.PHONY : main_sandbox.o
+.PHONY : src/Cube.algo.class.o
 
 # target to build an object file
-main_sandbox.cpp.o:
-	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/main_sandbox.cpp.o
-.PHONY : main_sandbox.cpp.o
+src/Cube.algo.class.cpp.o:
+	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/src/Cube.algo.class.cpp.o
+.PHONY : src/Cube.algo.class.cpp.o
 
-main_sandbox.i: main_sandbox.cpp.i
+src/Cube.algo.class.i: src/Cube.algo.class.cpp.i
 
-.PHONY : main_sandbox.i
+.PHONY : src/Cube.algo.class.i
 
 # target to preprocess a source file
-main_sandbox.cpp.i:
-	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/main_sandbox.cpp.i
-.PHONY : main_sandbox.cpp.i
+src/Cube.algo.class.cpp.i:
+	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/src/Cube.algo.class.cpp.i
+.PHONY : src/Cube.algo.class.cpp.i
 
-main_sandbox.s: main_sandbox.cpp.s
+src/Cube.algo.class.s: src/Cube.algo.class.cpp.s
 
-.PHONY : main_sandbox.s
+.PHONY : src/Cube.algo.class.s
 
 # target to generate assembly for a file
-main_sandbox.cpp.s:
-	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/main_sandbox.cpp.s
-.PHONY : main_sandbox.cpp.s
+src/Cube.algo.class.cpp.s:
+	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/src/Cube.algo.class.cpp.s
+.PHONY : src/Cube.algo.class.cpp.s
+
+src/Cube.class.o: src/Cube.class.cpp.o
+
+.PHONY : src/Cube.class.o
+
+# target to build an object file
+src/Cube.class.cpp.o:
+	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/src/Cube.class.cpp.o
+.PHONY : src/Cube.class.cpp.o
+
+src/Cube.class.i: src/Cube.class.cpp.i
+
+.PHONY : src/Cube.class.i
+
+# target to preprocess a source file
+src/Cube.class.cpp.i:
+	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/src/Cube.class.cpp.i
+.PHONY : src/Cube.class.cpp.i
+
+src/Cube.class.s: src/Cube.class.cpp.s
+
+.PHONY : src/Cube.class.s
+
+# target to generate assembly for a file
+src/Cube.class.cpp.s:
+	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/src/Cube.class.cpp.s
+.PHONY : src/Cube.class.cpp.s
+
+src/OpenCvHandler.class.o: src/OpenCvHandler.class.cpp.o
+
+.PHONY : src/OpenCvHandler.class.o
+
+# target to build an object file
+src/OpenCvHandler.class.cpp.o:
+	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/src/OpenCvHandler.class.cpp.o
+.PHONY : src/OpenCvHandler.class.cpp.o
+
+src/OpenCvHandler.class.i: src/OpenCvHandler.class.cpp.i
+
+.PHONY : src/OpenCvHandler.class.i
+
+# target to preprocess a source file
+src/OpenCvHandler.class.cpp.i:
+	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/src/OpenCvHandler.class.cpp.i
+.PHONY : src/OpenCvHandler.class.cpp.i
+
+src/OpenCvHandler.class.s: src/OpenCvHandler.class.cpp.s
+
+.PHONY : src/OpenCvHandler.class.s
+
+# target to generate assembly for a file
+src/OpenCvHandler.class.cpp.s:
+	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/src/OpenCvHandler.class.cpp.s
+.PHONY : src/OpenCvHandler.class.cpp.s
+
+src/Piece.class.o: src/Piece.class.cpp.o
+
+.PHONY : src/Piece.class.o
+
+# target to build an object file
+src/Piece.class.cpp.o:
+	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/src/Piece.class.cpp.o
+.PHONY : src/Piece.class.cpp.o
+
+src/Piece.class.i: src/Piece.class.cpp.i
+
+.PHONY : src/Piece.class.i
+
+# target to preprocess a source file
+src/Piece.class.cpp.i:
+	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/src/Piece.class.cpp.i
+.PHONY : src/Piece.class.cpp.i
+
+src/Piece.class.s: src/Piece.class.cpp.s
+
+.PHONY : src/Piece.class.s
+
+# target to generate assembly for a file
+src/Piece.class.cpp.s:
+	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/src/Piece.class.cpp.s
+.PHONY : src/Piece.class.cpp.s
+
+src/main.o: src/main.cpp.o
+
+.PHONY : src/main.o
+
+# target to build an object file
+src/main.cpp.o:
+	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/src/main.cpp.o
+.PHONY : src/main.cpp.o
+
+src/main.i: src/main.cpp.i
+
+.PHONY : src/main.i
+
+# target to preprocess a source file
+src/main.cpp.i:
+	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/src/main.cpp.i
+.PHONY : src/main.cpp.i
+
+src/main.s: src/main.cpp.s
+
+.PHONY : src/main.s
+
+# target to generate assembly for a file
+src/main.cpp.s:
+	$(MAKE) -f CMakeFiles/DisplayImage.dir/build.make CMakeFiles/DisplayImage.dir/src/main.cpp.s
+.PHONY : src/main.cpp.s
 
 # Help Target
 help:
@@ -159,9 +267,21 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... DisplayImage"
-	@echo "... main_sandbox.o"
-	@echo "... main_sandbox.i"
-	@echo "... main_sandbox.s"
+	@echo "... src/Cube.algo.class.o"
+	@echo "... src/Cube.algo.class.i"
+	@echo "... src/Cube.algo.class.s"
+	@echo "... src/Cube.class.o"
+	@echo "... src/Cube.class.i"
+	@echo "... src/Cube.class.s"
+	@echo "... src/OpenCvHandler.class.o"
+	@echo "... src/OpenCvHandler.class.i"
+	@echo "... src/OpenCvHandler.class.s"
+	@echo "... src/Piece.class.o"
+	@echo "... src/Piece.class.i"
+	@echo "... src/Piece.class.s"
+	@echo "... src/main.o"
+	@echo "... src/main.i"
+	@echo "... src/main.s"
 .PHONY : help
 
 

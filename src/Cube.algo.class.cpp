@@ -6,7 +6,7 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/06 10:47:39 by hhismans          #+#    #+#             */
-/*   Updated: 2017/11/06 18:07:13 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/11/07 14:06:11 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,56 @@ std::string Cube::stringFromInstruction(Instruction inst)
 	}
 }
 
+char convert_char(char inst, EFace face)
+{
+	if (inst == 'U' || inst == 'D')
+		return inst;
+	else if (inst == 'F')
+	{
+		if (face == FRONT) return 'F';
+		else if (face == BACK) return 'B';
+		else if (face == LEFT) return 'L';
+		else if (face == RIGHT) return 'R';
+	}
+	else if (inst == 'R')
+	{
+		if (face == FRONT) return 'R';
+		else if (face == BACK) return 'L';
+		else if (face == LEFT) return 'F';
+		else if (face == RIGHT) return 'R';
+	}
+	else if (inst == 'B')
+	{
+		if (face == FRONT) return 'B';
+		else if (face == BACK) return 'F';
+		else if (face == LEFT) return 'R';
+		else if (face == RIGHT) return 'L';
+	}
+	else if (inst == 'L')
+	{
+		if (face == FRONT) return 'L';
+		else if (face == BACK) return 'R';
+		else if (face == LEFT) return 'B';
+		else if (face == RIGHT) return 'F';
+	}
+	cerr << "error in convertchar" << endl;
+	return -1;
+}
+
+std::string convert_instructions(std::string str, EFace face)
+{
+	string ret = "";
+	for (int i = 0; i < str.size(); i++)
+	{
+		ret += convert_char(str[i], face);
+		if (i < str.size() - 1 && (str[i + 1] == '\'' || str[i + 1] ==  '2'))
+		{
+			ret += str[i + 1];
+			i++;
+		}
+	}
+	return ret;
+}
 
 string Cube::moveUpWithBuffer(int src, int dest, int orientation){ // exempel A_RIDGE on UP KO || OK
 	std::string instruction = "";
@@ -144,20 +194,20 @@ string Cube::moveUpWithBuffer(int src, int dest, int orientation){ // exempel A_
 	return instruction;
 }
 
-string middleToDown(int piece, int orientation, int & src_decal)
+string middleToDown(int piece, int orientation)
 {
-		case E_RIDGE : orientation == OK ? return "L" : return "F'";
-		case F_RIDGE : orientation == OK ? return "L'" : return "B";
-		case G_RIDGE : orientation == OK ? return "R" : return "B'";
-		case H_RIDGE : orientation == OK ? return "R'" : return "F";
+	if  (piece == E_RIDGE) {if (orientation == OK) return "L"; else return "F'";}
+	if  (piece == F_RIDGE) {if (orientation == OK) return "L'"; else return "B";}
+	if  (piece == G_RIDGE) {if (orientation == OK) return "R"; else return "B'";}
+	if  (piece == H_RIDGE) {if (orientation == OK) return "R'"; else return "F";}
 }
 
 string downToMiddle(int piece, int orientation)
 {
-		case E_RIDGE : orientation == OK ? return "L'" : return "F";
-		case F_RIDGE : orientation == OK ? return "L" : return "B'";
-		case G_RIDGE : orientation == OK ? return "R'" : return "B";
-		case H_RIDGE : orientation == OK ? return "R" : return "F'";
+	if  (piece == E_RIDGE) {if (orientation == OK) return "L'"; else return "F";}
+	if  (piece == F_RIDGE) {if (orientation == OK) return "L"; else return "B'";}
+	if  (piece == G_RIDGE) {if (orientation == OK) return "R'"; else return "B";}
+	if  (piece == H_RIDGE) {if (orientation == OK) return "R"; else return "F'";}
 }
 
 int ridgeFromString(string inst)
@@ -170,7 +220,8 @@ int ridgeFromString(string inst)
 		case 'F': return A_RIDGE;
 	}
 }
-string moveMiddleWithBuffer(i, _ridges[i]._im, _ridges[i]._orientation)
+
+string Cube::moveMiddleWithBuffer(int src, int dest, int orientation)
 {
 	std::string instruction = "";
 	int delta = dest - src;
@@ -179,7 +230,7 @@ string moveMiddleWithBuffer(i, _ridges[i]._im, _ridges[i]._orientation)
 	if (orientation == OK)
 	{//example
 		//cerr << "in moveupwithbuffer : OK src = "<<src << " dst = " << dest<<  endl;
-		instruction += middleToDown(src, orientation, src_decal);
+		instruction += middleToDown(src, orientation);
 		src_decal = ridgeFromString(instruction);
 		instruction += getDecalInstruction(src, dest,"D");
 		if (isAllOk(src_decal)) instruction += stringFromInstruction(faceFromPiece((src + 3) % 4)); // replace buffer decal if is correct
