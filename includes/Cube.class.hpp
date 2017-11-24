@@ -6,7 +6,7 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/25 01:53:59 by hhismans          #+#    #+#             */
-/*   Updated: 2017/11/24 15:50:56 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/11/24 16:51:13 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include "../includes/enum.hpp"
 # include "../includes/Piece.class.hpp"
 
+# include <unistd.h>
 using namespace cv; // SHAME
 using namespace std;
 

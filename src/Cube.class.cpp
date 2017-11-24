@@ -6,7 +6,7 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/25 01:53:40 by hhismans          #+#    #+#             */
-/*   Updated: 2017/11/24 16:11:42 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/11/24 18:21:44 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ const int Cube::_cfront[]	=	{ONE, TWO, SIX, FIVE};
 
 ostream& operator<<(ostream& os, const Cube& cube)
 {
-	for (int i = 0; i < 6; i++)
+	/*for (int i = 0; i < 6; i++)
 	{
 		os << "face " << i << endl;
 		for (int j = 0; j < 9; j++)
@@ -63,6 +63,12 @@ ostream& operator<<(ostream& os, const Cube& cube)
 		os << endl;
 	}
 	os << "---------------------------------------" << endl;
+	for (int i = A_RIDGE; i <= L_RIDGE; i++)*/
+		//os << cube._ridges[i]<<endl;
+		os << "A "<< cube._ridges[0] <<endl;
+		os << "B "<< cube._ridges[1] <<endl;
+		os << "C "<< cube._ridges[2] <<endl;
+		os << "D "<< cube._ridges[3] <<endl;
 	return os;
 }
 
@@ -286,26 +292,16 @@ int	getRidgeOrientation(int position, int faces[6][9])
 void Cube::init()
 {
 	//initCubeWithFace(_intFace);
-	_ridges[A_RIDGE]._im = H_RIDGE;
-	_ridges[B_RIDGE]._im = H_RIDGE;
-	_ridges[C_RIDGE]._im = H_RIDGE;
-	_ridges[D_RIDGE]._im = D_RIDGE;
 
-	_ridges[A_RIDGE]._orientation = KO;
-	_ridges[B_RIDGE]._orientation = KO;
-	_ridges[C_RIDGE]._orientation = OK;
-	_ridges[D_RIDGE]._orientation = KO;
-
-	_ridges[A_RIDGE]._im = C_RIDGE;
+	_ridges[A_RIDGE]._im = A_RIDGE;
 	_ridges[A_RIDGE]._orientation = OK;
-
-	_ridges[B_RIDGE]._im = H_RIDGE;
+	_ridges[B_RIDGE]._im = D_RIDGE;
 	_ridges[B_RIDGE]._orientation = KO;
+
 	_ridges[C_RIDGE]._im = H_RIDGE;
 	_ridges[C_RIDGE]._orientation = KO;
 	_ridges[D_RIDGE]._im = H_RIDGE;
 	_ridges[D_RIDGE]._orientation = KO;
-
 }
 
 void Cube::initCubeWithFace(int faces[6][9])

@@ -6,7 +6,7 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/06 10:47:39 by hhismans          #+#    #+#             */
-/*   Updated: 2017/11/24 16:15:50 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/11/24 19:38:51 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ std::string Cube::stringFromInstruction(Instruction inst)
 	}
 }
 
-char convert_char(char inst, EFace face)
+char convert_char(char inst, int face)
 {
 	if (inst == 'U' || inst == 'D')
 		return inst;
@@ -148,7 +148,7 @@ char convert_char(char inst, EFace face)
 	return -1;
 }
 
-std::string convert_instructions(std::string str, EFace face)
+std::string convert_instructions(std::string str, int face)
 {
 	string ret = "";
 	for (int i = 0; i < str.size(); i++)
@@ -170,7 +170,6 @@ string Cube::moveUpWithBuffer(int src, int dest, int orientation){ // exempel A_
 	int src_decal;
 	if (orientation == OK) // mais oui cest clair
 	{//example
-		cerr << "in moveupwithbuffer : OK src = "<<src << " dst = " << dest<<  endl;
 		instruction += stringFromInstruction(faceFromPiece(src));
 		instruction += "2"; // for now, (FBLR)2
 		instruction += getDecalInstruction(src, dest,"D");
@@ -179,18 +178,17 @@ string Cube::moveUpWithBuffer(int src, int dest, int orientation){ // exempel A_
 	}
 	else if (orientation == KO)
 	{ // example, A_RIDGE is C_RIDGE KO 
-		cerr << "in moveupwithbuffer : KO src = "<<src << " dst = " << dest<<  endl;
-		instruction += stringFromInstruction(faceFromPiece(src)); // F
-		if (dest == ((src+3) % 4)) return (instruction + stringFromInstruction(faceFromPiece((src+3)%4))); // mais oui c'est clair
-		instruction += stringFromInstruction(faceFromPiece((src + 3) % 4)); // R'
-		instruction += "'";
-		src_decal = (src + 3) % 4;
-		instruction += getDecalInstruction (src_decal, dest, "D"); //D
-		instruction += stringFromInstruction(faceFromPiece(dest)); //R2
-		instruction += "2";
-		if (isAllOk(src_decal)) instruction += stringFromInstruction(faceFromPiece((src + 3) % 4)); // replace buffer decal if is correct
+		std::string default_inst = "";
+		if (dest == ((src+1) % 4)) {default_inst  = "FR" ;instruction = convert_instructions(default_inst, faceFromPiece(src));} // mais oui c'est clair
+		else if (dest == ((src+3) % 4)) {default_inst  = "F'L'" ;instruction = convert_instructions(default_inst, faceFromPiece(src));} // mais oui c'est clair
+		else
+		{
+			string default_inst = "FR'D2L2";
+			src_decal = (src + 3) % 4;
+			if (isAllOk(src_decal)) default_inst += "R"; // replace buffer decal if is correct
+			instruction = convert_instructions(default_inst, faceFromPiece(src));
+		}
 	} // end
-	cerr << "instruction for this case"<< instruction << endl;
 	moveString(instruction);
 	return instruction;
 }
@@ -229,7 +227,7 @@ string Cube::moveMiddleWithBuffer(int src, int dest, int orientation)
 	int src_decal;
 
 	if (orientation == OK)
-	{//example
+	{
 		//cerr << "in moveupwithbuffer : OK src = "<<src << " dst = " << dest<<  endl;
 		instruction += middleToDown(src, orientation);
 		src_decal = ridgeFromString(instruction);
@@ -248,19 +246,21 @@ void Cube::doWhiteCross(){
 	string instruction ="";
 	if (placedRidgeNb == 0) instruction = caseCanMoveFirstLayer(); // simple
 	if (placedRidgeNb == 4) return; // simple
-	cout <<"tes"<<endl;
 	for (int i = A_RIDGE; i <= D_RIDGE ; i++) // HERE if something was on top layer, it will alredy right placed, but not if there's 2 on top ladder
 	{
-		if (isUpRidge(_ridges[i]._im))
+		if (isUpRidge(_ridges[i]._im) && !(isAllOk(i)))
 		{
 			instruction += moveUpWithBuffer(i, _ridges[i]._im, _ridges[i]._orientation);
+			cout << "redo : " << *this<<endl;
+			sleep(1);
 			doWhiteCross();
 		}
 	}
-	for (int i = E_RIDGE; i < H_RIDGE; i++)
+
+	/*for (int i = E_RIDGE; i < H_RIDGE; i++)
 	{
 		if (isUpRidge(_ridges[i]._im))
 			instruction += moveMiddleWithBuffer(i, _ridges[i]._im, _ridges[i]._orientation);
-	}
+	}*/
 	cout << instruction << endl;
 }
