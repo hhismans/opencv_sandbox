@@ -6,7 +6,7 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/25 01:53:40 by hhismans          #+#    #+#             */
-/*   Updated: 2017/11/06 17:12:16 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/11/24 16:11:42 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 
 //TODO : movestring()
 
-const int Cube::_tup[]	=	{A_RIDGE,D_RIDGE,C_RIDGE,B_RIDGE};
+
+const int Cube::_tup[]		=	{A_RIDGE,D_RIDGE,C_RIDGE,B_RIDGE};
 const int Cube::_tdown[]	=	{I_RIDGE,J_RIDGE,K_RIDGE,L_RIDGE};
 const int Cube::_tleft[]	=	{B_RIDGE,F_RIDGE,J_RIDGE,E_RIDGE};
 const int Cube::_tright[]	=	{D_RIDGE,H_RIDGE,L_RIDGE,G_RIDGE};
@@ -28,6 +29,7 @@ const int Cube::_cleft[]	=	{TWO, THREE,SEVEN, SIX};
 const int Cube::_cright[]	=	{ONE, FIVE, EIGHT, FOUR};
 const int Cube::_cback[]	=	{FOUR, EIGHT, SEVEN, THREE};
 const int Cube::_cfront[]	=	{ONE, TWO, SIX, FIVE};
+
 
 ostream& operator<<(ostream& os, const Cube& cube)
 {
@@ -406,9 +408,16 @@ Cube::~Cube( void )
 void Cube::cyclingRidge(const int cycle[4], bool changeOrientation)
 {
 	Piece r_tmp;
+	
+	cerr << "cycle "  << cycle <<endl;
+	cerr << "cycle[0] =  "  << cycle[0] <<endl;
+	cerr << "_ridges[0] =  "  << _ridges[0] <<endl;
+	cerr << "cyclingRidge in b"  << endl;
 	r_tmp = _ridges[cycle[0]];
+	cerr << "cyclingRidge in for"  << endl;
 	for (int pos = 0; pos < 3; pos++) // OLOL You know iterator right ?, nevermind
 	{
+	cerr << "cyclingRidge in for"  << endl;
 		_ridges[cycle[pos]] = _ridges[cycle[pos + 1]];
 		if (changeOrientation)
 			_ridges[cycle[pos]]._orientation = !_ridges[cycle[pos]]._orientation;
@@ -495,7 +504,9 @@ void Cube::moveString(std::string str)
 		else
 			instruction_size = 1;
 		instruction = str.substr(0, instruction_size);
+	cerr << "caseCanMoveFirstLayer after substr"<< endl;
 		str.erase(0,instruction_size);
+	cerr << "caseCanMoveFirstLayer after erase"  << endl;
 		if (instruction == "U") move(IUP);
 		else if (instruction == "D") move(IDOWN);
 		else if (instruction == "L") move(ILEFT);
@@ -510,7 +521,7 @@ void Cube::moveString(std::string str)
 		else if (instruction == "B'") for(int i = 0;i<3;i++)move(IBACK);
 		else if (instruction == "F'") for(int i = 0;i<3;i++)move(IFRONT);
 
-		else if (instruction == "U2") for(int i = 0;i<2;i++)move(IUP);
+		else if (instruction == "U2") for(int i = 0;i<2;i++){cout << "hey" << endl;move(IUP);}
 		else if (instruction == "D2") for(int i = 0;i<2;i++)move(IDOWN);
 		else if (instruction == "L2") for(int i = 0;i<2;i++)move(ILEFT);
 		else if (instruction == "R2") for(int i = 0;i<2;i++)move(IRIGHT);
@@ -550,28 +561,33 @@ void Cube::move(Instruction instruction)
 
 	switch (instruction)
 	{
-		case IUP :	cyclingRidge(_tup, false);
-					cyclingCorner(_cup, -1);
+		case IUP :	
+					cerr << "HEyYY" << endl;
+					cerr << "Cube : " << Cube::_tup<< endl;
+					cyclingRidge(Cube::_tup, false);
+					cout << "ridge ok" <<endl;
+					cyclingCorner(Cube::_cup, -1);
+					cout << "corner ok" <<endl;
 					cout << "UP CALL" <<endl;
 					break;
-		case IDOWN : cyclingRidge(_tdown, false);
-					cyclingCorner(_cdown, -1);
+		case IDOWN : cyclingRidge(Cube::_tdown, false);
+					cyclingCorner(Cube::_cdown, -1);
 					cout << "DOWN CALL" <<endl;
 					break;
-		case ILEFT : cyclingRidge(_tleft, true);
-					cyclingCorner(_cleft, CW);
+		case ILEFT : cyclingRidge(Cube::_tleft, true);
+					cyclingCorner(Cube::_cleft, CW);
 					cout << "LEFT CALL" <<endl;
 					break;
-		case IRIGHT: cyclingRidge(_tright, false);
-					cyclingCorner(_cright, CCW);
+		case IRIGHT: cyclingRidge(Cube::_tright, false);
+					cyclingCorner(Cube::_cright, CCW);
 					cout << "RIGHT CALL" <<endl;
 					break;
-		case IBACK:  cyclingRidge(_tback, false);
-					cyclingCorner(_cback, CCW); 
+		case IBACK:  cyclingRidge(Cube::_tback, false);
+					cyclingCorner(Cube::_cback, CCW); 
 					cout << "BACK CALL" <<endl;
 					break;
-		case IFRONT: cyclingRidge(_tfront, false);
-					cyclingCorner(_cfront, CW);
+		case IFRONT: cyclingRidge(Cube::_tfront, false);
+					cyclingCorner(Cube::_cfront, CW);
 					cout << "FRONT CALL" <<endl;
 					break;
 	}

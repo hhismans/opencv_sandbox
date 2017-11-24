@@ -6,7 +6,7 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/27 05:23:03 by hhismans          #+#    #+#             */
-/*   Updated: 2017/11/03 08:15:05 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/11/24 16:17:16 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,23 @@ Piece::~Piece( void )
 
 Piece &Piece::operator=( Piece const & rhs )
 {
+	cerr << "operator = piece " << endl;
 	_type = rhs._type;
 	_im = rhs._im;
 	_orientation = rhs._orientation;
+	return *this;
+	cerr << "operator = piece " << endl;
 }
+/*
+Piece& Piece::operator=(const Piece &rhs) // copy assignment
+{
+	if (this != &rhs) { // self-assignment check expected
+		_type = rhs._type;
+		_im = rhs._im;
+		_orientation = rhs._orientation;
+	}
+	return *this;
+}*/
 
 std::ostream& operator<<(std::ostream& os, const Piece& rhs)
 {
@@ -108,7 +121,7 @@ std::ostream& operator<<(std::ostream& os, const Piece& rhs)
 			case L_RIDGE: 
 				os << "BLUE AND YELLOW";
 				break;
-
 		}
 	}
+	return os;
 }

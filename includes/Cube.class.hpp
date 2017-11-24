@@ -6,7 +6,7 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/25 01:53:59 by hhismans          #+#    #+#             */
-/*   Updated: 2017/11/07 10:59:03 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/11/24 15:50:56 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ using namespace std;
 // first layer formula
 // pour passer au prochain ridge : (i + 1) % 4
 // pour passer au precedent ridge : (i + 3) % 4
+
+
 class Cube
 {
 	public:
@@ -60,7 +62,7 @@ class Cube
 
 		//algo
 		void doWhiteCross();
-string moveMiddleWithBuffer(i, _ridges[i]._im, _ridges[i]._orientation);
+		string moveMiddleWithBuffer(int src, int dest, int orientation);
 			void moveUpWellOriented(int init, int dest);
 		void moveUpBadOriented(int init, int dest);
 			std::string stringFromInstruction(Instruction inst);
@@ -72,7 +74,6 @@ string moveMiddleWithBuffer(i, _ridges[i]._im, _ridges[i]._orientation);
 		Piece			_coins[8];
 		Piece			_ridges[12];
 		std::string		solution;
-	private:
 		/*
 		 * Cube decrit comme 8 coin et 12 arete.
 		 * Chaque arete
@@ -92,7 +93,6 @@ string moveMiddleWithBuffer(i, _ridges[i]._im, _ridges[i]._orientation);
 	static const int _cback[4]	;
 	static const int _cfront[4]	;
 };
-
 
 ostream& operator<<(ostream& os, const Cube& Cube);
 #endif

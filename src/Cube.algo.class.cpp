@@ -6,7 +6,7 @@
 /*   By: hhismans <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/06 10:47:39 by hhismans          #+#    #+#             */
-/*   Updated: 2017/11/07 14:06:11 by hhismans         ###   ########.fr       */
+/*   Updated: 2017/11/24 16:15:50 by hhismans         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ string Cube::caseCanMoveFirstLayer()
 		if (isUpRidge(_ridges[i]._im) && _ridges[i]._orientation == OK)
 		{
 			instruction = getDecalInstruction(i, _ridges[i]._im,  "U");
+			break;
 		}
 	}
 	cerr << "first layer isntruction ; " << instruction << endl;
@@ -242,10 +243,12 @@ string Cube::moveMiddleWithBuffer(int src, int dest, int orientation)
 
 void Cube::doWhiteCross(){
 	int placedRidgeNb = nbOkRidge();
-	cout <<"efterit"<<endl;
+	cout <<"placedRidgeNb "<< placedRidgeNb<<endl;
+	cout <<"ridge[0]=  "<< _ridges[0] <<endl;
 	string instruction ="";
 	if (placedRidgeNb == 0) instruction = caseCanMoveFirstLayer(); // simple
 	if (placedRidgeNb == 4) return; // simple
+	cout <<"tes"<<endl;
 	for (int i = A_RIDGE; i <= D_RIDGE ; i++) // HERE if something was on top layer, it will alredy right placed, but not if there's 2 on top ladder
 	{
 		if (isUpRidge(_ridges[i]._im))
